@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advanced School Management Dashboard</title>
+    <!-- Load Inter font for consistent typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --bg: #eef1f7;
+            --card: #ffffff;
+            --dark: #1e293b;
+            --muted: #6b7280;
+            --radius: 20px;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            --shadow-soft: 0 4px 14px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Inter, sans-serif
+        }
+
+        /* Visually hidden, accessible label helper */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        body {
+            background: var(--bg)
+        }
+
+        /* Layout */
+        .wrapper {
+            display: flex;
+            min-height: 100vh
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--card);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border-top-right-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 25px;
+        }
+
+        .menu-item {
+            padding: 14px 16px;
+            font-size: 15px;
+            border-radius: 12px;
+            color: var(--dark);
+            margin-bottom: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .menu-item:hover,
+        .menu-item.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow-soft);
+        }
+
+        /* Main content */
+        .content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .searchbar {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            width: 350px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .searchbar input {
+            border: none;
+            width: 100%;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        /* Cards */
+        .grid {
+            margin-top: 25px;
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(12, 1fr)
+        }
+
+        .card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .col-3 {
+            grid-column: span 3
+        }
+
+        .col-4 {
+            grid-column: span 4
+        }
+
+        .col-6 {
+            grid-column: span 6
+        }
+
+        .col-8 {
+            grid-column: span 8
+        }
+
+        .col-12 {
+            grid-column: span 12
+        }
+
+        .stat-title {
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 6px
+        }
+
+        .stat-value {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--dark)
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px
+        }
+
+        th {
+            color: var(--muted)
+        }
+
+        .status {
+            padding: 6px 12px;
+            border-radius: 50px;
+            color: white;
+            font-size: 12px
+        }
+
+        .green {
+            background: #16a34a
+        }
+
+        .red {
+            background: #dc2626
+        }
+
+        .orange {
+            background: #f97316
+        }
+
+        /* Form */
+        .form-box {
+            display: flex;
+            gap: 12px;
+        }
+
+        input,
+        select {
+            padding: 10px;
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            outline: none;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: var(--primary-light)
+        }
+
+        /* Small button for actions */
+        .btn.small-btn {
+            padding: 6px 10px;
+            font-size: 12px;
+            border-radius: 6px;
+            padding: 6px 10px;
+            background: #ef4444;
+        }
+
+        .btn.small-btn:hover {
+            background: #dc2626; /* darker red */
+        }
+
+        /* Message/alert area */
+        #message {
+            font-size: 13px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.03);
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrapper">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="logo">SchoolPro Dashboard</div>
+
+            <div class="menu-item active">🏠 Dashboard</div>
+            <div class="menu-item">🎓 Students</div>
+            <div class="menu-item">👨‍🏫 Teachers</div>
+            <div class="menu-item">🏫 Classes</div>
+            <div class="menu-item">📅 Timetable</div>
+            <div class="menu-item">📝 Exams</div>
+            <div class="menu-item">📢 Notices</div>
+            <div class="menu-item">⚙ Settings</div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="content">
+
+            <!-- Topbar -->
+            <div class="topbar">
+                <div class="searchbar">
+                    🔍 <input id="searchInput" placeholder="Search anything…" aria-label="Search students" />
+                </div>
+
+                <div style="display:flex; align-items:center; gap:8px; margin-left:18px;">
+                    <label for="debugToggle" style="font-size:12px; color:var(--muted);">Debug</label>
+                    <input id="debugToggle" type="checkbox" aria-label="Toggle debug logs" />
+                </div>
+
+                <div class="avatar">A</div>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid">
+
+                <div class="card col-3">
+                    <div class="stat-title">Total Students</div>
+                    <div class="stat-value">1,245</div>
+                </div>
+
+                <div class="card col-3">
+                    <div class="stat-title">Total Teachers</div>
+                    <div class="stat-value">55</div>
+                </div>
+
+                <div class="card col-3">
+                    <div class="stat-title">Classes</div>
+                    <div class="stat-value">42</div>
+                </div>
+
+                <div class="card col-3">
+                    <div class="stat-title">Pending Fees</div>
+                    <div class="stat-value">₹ 2,45,000</div>
+                </div>
+
+                <!-- Students Table -->
+                <div class="card col-8">
+                    <h3>Recent Students</h3>
+                    <table id="studentsTable">
+                        <tr>
+                            <th>Name</th>
+                            <th>Class</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        <tbody id="studentsTbody">
+                            <tr>
+                                <td>Rahul Sharma</td>
+                                <td>10-B</td>
+                                <td><span class="status green">Active</span></td>
+                                <td><button class="btn small-btn del-btn" data-name="Rahul Sharma" data-class="10-B" aria-label="Delete Rahul Sharma">Delete</button></td>
+                            </tr>
+                            <tr>
+                                <td>Pooja Verma</td>
+                                <td>7-A</td>
+                                <td><span class="status orange">Pending</span></td>
+                                <td><button class="btn small-btn del-btn" data-name="Pooja Verma" data-class="7-A" aria-label="Delete Pooja Verma">Delete</button></td>
+                            </tr>
+                            <tr>
+                                <td>Aman Singh</td>
+                                <td>12-C</td>
+                                <td><span class="status green">Active</span></td>
+                                <td><button class="btn small-btn del-btn" data-name="Aman Singh" data-class="12-C" aria-label="Delete Aman Singh">Delete</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Add Student -->
+                <div class="card col-4">
+                    <h3>Add Student</h3><br>
+
+                    <div class="form-box">
+                        <label for="studentName" class="sr-only">Student Name</label>
+                        <input id="studentName" type="text" placeholder="Student Name" />
+                    </div><br>
+
+                    <div class="form-box">
+                        <label for="studentGrade" class="sr-only">Grade</label>
+                        <select id="studentGrade">
+                            <option value="">Grade</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option>8</option>
+                            <option>9</option>
+                            <option>10</option>
+                            <option>11</option>
+                            <option>12</option>
+                        </select>
+                        <label for="studentSection" class="sr-only">Section</label>
+                        <select id="studentSection">
+                            <option value="">Section</option>
+                            <option>A</option>
+                            <option>B</option>
+                            <option>C</option>
+                            <option>D</option>
+                        </select>
+                    </div><br>
+
+                    <button id="addStudentBtn" class="btn">Add Student</button>
+                    <div id="message" role="status" aria-live="polite" style="margin-top:10px;"></div>
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
+    <script>
+        (function () {
+            let DEBUG = false; // toggled from topbar checkbox
+            const log = (...args) => { if (DEBUG && console && console.log) console.log('[DEBUG]', ...args); };
+
+            const addStudentBtn = document.getElementById('addStudentBtn');
+            const studentName = document.getElementById('studentName');
+            const studentGrade = document.getElementById('studentGrade');
+            const studentSection = document.getElementById('studentSection');
+            const message = document.getElementById('message');
+            const studentsTbody = document.getElementById('studentsTbody');
+            const searchInput = document.getElementById('searchInput');
+            const debugToggle = document.getElementById('debugToggle');
+            const totalStudentsStat = document.querySelector('.card.col-3 .stat-value');
+
+            function showMessage(msg, type = 'info') {
+                if (!message) return;
+                message.innerText = msg;
+                // color and background according to type
+                switch (type) {
+                    case 'error':
+                        message.style.color = '#7f1d1d';
+                        message.style.background = '#fee2e2';
+                        break;
+                    case 'success':
+                        message.style.color = '#065f46';
+                        message.style.background = '#ecfdf5';
+                        break;
+                    default:
+                        message.style.color = '#374151';
+                        message.style.background = 'rgba(0,0,0,0.03)';
+                }
+                setTimeout(() => { message.innerText = ''; message.style.background = 'transparent'; }, 3500);
+            }
+
+            const STORAGE_KEY = 'school_students_v1';
+
+            function getStoredStudents() {
+                try {
+                    const raw = localStorage.getItem(STORAGE_KEY);
+                    return raw ? JSON.parse(raw) : null;
+                } catch (err) {
+                    log('parse storage error', err);
+                    return null;
+                }
+            }
+
+            function setStoredStudents(arr) {
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+                } catch (e) { log('localStorage error', e); }
+            }
+
+            function isDuplicate(name, cls) {
+                const arr = getStoredStudents() || [];
+                return arr.some(s => s.name.toLowerCase() === name.toLowerCase() && s.cls === cls);
+            }
+
+            addStudentBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const name = (studentName.value || '').trim();
+                const grade = (studentGrade.value || '').trim();
+                const section = (studentSection.value || '').trim();
+                const cls = (grade && section) ? `${grade}-${section}` : (grade || section || '');
+                log('Add Student clicked:', { name, cls });
+                if (!name) { log('Name is required'); showMessage('Please enter a student name', 'error'); return; }
+                if (!cls) { log('Class selection is required'); showMessage('Please select a class', 'error'); return; }
+                if (isDuplicate(name, cls)) { log('Duplicate student'); showMessage('Student already exists', 'error'); return; }
+
+                const tr = document.createElement('tr');
+                const tdName = document.createElement('td'); tdName.textContent = name;
+                const tdClass = document.createElement('td'); tdClass.textContent = cls;
+                const tdStatus = document.createElement('td');
+                const span = document.createElement('span'); span.className = 'status green'; span.textContent = 'Active';
+                tdStatus.appendChild(span);
+                tr.appendChild(tdName); tr.appendChild(tdClass); tr.appendChild(tdStatus);
+                studentsTbody.appendChild(tr);
+                // persist
+                const arr = getStoredStudents() || [];
+                arr.push({ name, cls, status: 'Active' });
+                setStoredStudents(arr);
+                updateTotalStat();
+                log('Student added successfully', { name, cls });
+                showMessage('Student added successfully', 'success');
+                studentName.value = '';
+                studentGrade.value = '';
+                studentSection.value = '';
+            });
+
+            // Add keyboard accessibility: press Enter in the name field to add
+            studentName.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') addStudentBtn.click();
+            });
+            studentGrade.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') addStudentBtn.click();
+            });
+            studentSection.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') addStudentBtn.click();
+            });
+
+            // Delete button handler (event delegation)
+            studentsTbody.addEventListener('click', (ev) => {
+                const bt = ev.target.closest('.del-btn');
+                if (!bt) return;
+                const nm = bt.getAttribute('data-name');
+                const clsVal = bt.getAttribute('data-class');
+                log('Delete clicked', { nm, clsVal });
+                // find corresponding row in DOM and remove
+                const row = bt.closest('tr');
+                if (row) row.remove();
+                // update storage
+                let arr = getStoredStudents() || [];
+                arr = arr.filter(s => !(s.name === nm && s.cls === clsVal));
+                setStoredStudents(arr);
+                showMessage('Student removed', 'info');
+                updateTotalStat();
+            });
+
+            // Search
+            searchInput.addEventListener('input', (e) => {
+                const q = (e.target.value || '').toLowerCase();
+                filterStudents(q);
+            });
+
+            // Debug toggle
+            debugToggle.addEventListener('change', (e) => {
+                DEBUG = !!e.target.checked;
+                log('Debug toggled', DEBUG);
+            });
+
+            function filterStudents(q) {
+                for (const row of studentsTbody.querySelectorAll('tr')) {
+                    const name = row.children[0]?.textContent?.toLowerCase() || '';
+                    const clsVal = row.children[1]?.textContent?.toLowerCase() || '';
+                    const visible = name.includes(q) || clsVal.includes(q);
+                    row.style.display = visible ? '' : 'none';
+                }
+            }
+
+            function updateTotalStat() {
+                const arr = getStoredStudents() || [];
+                if (totalStudentsStat) totalStudentsStat.textContent = arr.length.toLocaleString();
+            }
+
+            // Initialize from storage
+            (function initFromStorage() {
+                const stored = getStoredStudents();
+                if (stored && stored.length) {
+                    // clear current tbody and render stored list
+                    studentsTbody.innerHTML = '';
+                    for (const s of stored) {
+                        const tr = document.createElement('tr');
+                        const tdName = document.createElement('td'); tdName.textContent = s.name;
+                        const tdClass = document.createElement('td'); tdClass.textContent = s.cls;
+                        const tdStatus = document.createElement('td');
+                        const span = document.createElement('span'); span.className = s.status === 'Active' ? 'status green' : 'status orange'; span.textContent = s.status;
+                        tdStatus.appendChild(span);
+                        const tdAction = document.createElement('td');
+                        const btn = document.createElement('button'); btn.className = 'btn small-btn del-btn'; btn.textContent = 'Delete'; btn.setAttribute('data-name', s.name); btn.setAttribute('data-class', s.cls); btn.setAttribute('aria-label', `Delete ${s.name}`);
+                        tdAction.appendChild(btn);
+                        tr.appendChild(tdName); tr.appendChild(tdClass); tr.appendChild(tdStatus); tr.appendChild(tdAction);
+                        studentsTbody.appendChild(tr);
+                    }
+                } else {
+                    // if no storage, capture initial static rows and store them
+                    const arr = [];
+                    for (const row of studentsTbody.querySelectorAll('tr')) {
+                        const nm = row.children[0]?.textContent?.trim();
+                        const cl = row.children[1]?.textContent?.trim();
+                        if (!nm || !cl) continue;
+                        const statusText = row.children[2]?.textContent?.trim() || 'Active';
+                        arr.push({ name: nm, cls: cl, status: statusText });
+                        // ensure there's a delete button for the static rows
+                        const existingBtn = row.querySelector('.del-btn');
+                        if (!existingBtn) {
+                            const tdAction = document.createElement('td');
+                            const btn = document.createElement('button'); btn.className = 'btn small-btn del-btn'; btn.textContent = 'Delete'; btn.setAttribute('data-name', nm); btn.setAttribute('data-class', cl); btn.setAttribute('aria-label', `Delete ${nm}`);
+                            tdAction.appendChild(btn);
+                            row.appendChild(tdAction);
+                        }
+                    }
+                    setStoredStudents(arr);
+                }
+                updateTotalStat();
+            })();
+
+            log('Student add handler initialized');
+        })();
+    </script>
+
+</body>
+
+</html>
